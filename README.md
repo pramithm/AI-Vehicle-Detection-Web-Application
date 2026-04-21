@@ -117,9 +117,9 @@ http://127.0.0.1:5000/
 
 ---
 
-## 📸 Output (Add Screenshots Here)
+## 📸 Output
 
-> Add screenshots of:
+> Added screenshots of:
 
 * Detection output
 * Web interface

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VisionAI · Vehicle Detection</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f5f5f5;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #ideaBox {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        #ideaBox {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            width: 75%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 15px;
+
+            background: linear-gradient(135deg, #ffffff, #f0f4ff);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+            text-align: left;
+            transition: 0.3s ease;
+        }
+
+        /* Heading */
+        #ideaBox h2 {
+            text-align: center;
+            color: #4c148b;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        /* Paragraph */
+        #ideaBox p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Subheadings */
+        #ideaBox p b {
+            color: #c24d34;
+            font-size: 18px;
+        }
+
+        /* Lists */
+        #ideaBox ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        #ideaBox ul li {
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        /* Highlight important lines */
+        #ideaBox ul li::marker {
+            color: #4c148b;
+        }
+
+        /* ── IDEA BOX ── */
+        #ideaBox {
+            display: none;
+            margin-top: 1.5rem;
+            animation: fadeUp 0.35s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .idea-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #fff;
+            border: 1px solid #DDE3EE;
+            border-radius: 14px;
+            padding: 1.1rem 1.4rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .idea-header-icon {
+            width: 46px;
+            height: 46px;
+            background: #FEF9C3;
+            color: #CA8A04;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .idea-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+            text-align: left;
+        }
+
+        .idea-header p {
+            font-size: 0.78rem;
+            color: #6B7280;
+            margin-top: 0.2rem;
+        }
+
+        .idea-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .idea-card {
+            background: #fff;
+            border: 1px solid #DDE3EE;
+            border-radius: 14px;
+            padding: 1.1rem 1.2rem;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .idea-card-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .idea-card p {
+            font-size: 0.82rem;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .idea-card ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .idea-card ul li {
+            font-size: 0.81rem;
+            color: #374151;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .idea-card ul li i {
+            margin-top: 0.18rem;
+            font-size: 0.68rem;
+            flex-shrink: 0;
+        }
+
+        .idea-card ul li b {
+            font-weight: 600;
+        }
+
+        /* Card color themes */
+        .idea-card.blue .idea-card-title {
+            color: #2563EB;
+        }
+
+        .idea-card.blue ul li i {
+            color: #2563EB;
+        }
+
+        .idea-card.green .idea-card-title {
+            color: #15803D;
+        }
+
+        .idea-card.green ul li i {
+            color: #15803D;
+        }
+
+        .idea-card.amber .idea-card-title {
+            color: #B45309;
+        }
+
+        .idea-card.amber ul li i {
+            color: #B45309;
+        }
+
+        .idea-card.violet .idea-card-title {
+            color: #6D28D9;
+        }
+
+        .idea-card.violet ul li i {
+            color: #6D28D9;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #c24d34, #4c148b);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+    <nav>
+        <a class="brand" href="#">
+            <div class="brand-icon"><i class="fa-solid fa-car-side"></i></div>
+            <span class="brand-name">Vision<span>AI</span></span>
+        </a>
+
+        <div class="nav-links">
+            <a class="nav-link active" href="#">Live Monitor</a>
+        </div>
+
+        <div class="nav-right">
+            <div class="live-pill">
+                <div class="live-dot"></div> Live
+            </div>
+            <a class="icon-btn" href="#" title="Settings"><i class="fa-solid fa-sliders"></i></a>
+            <a class="icon-btn" href="#" title="Account"><i class="fa-solid fa-circle-user"></i></a>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════ PAGE ═══════════════════ -->
+    <div class="page">
+
+        <!-- Page Header -->
+        <div class="page-head">
+            <div>
+                <h1>AI-Based Real-Time Detection</h1>
+                <p>Camera 01 · Main Road · YOLOv8 Model · Python + Flask + OpenCV</p>
+            </div>
+            <div class="action-row">
+                <button class="btn"><i class="fa-solid fa-pause"></i> Pause</button>
+                <button class="btn"><i class="fa-solid fa-expand"></i> Fullscreen</button>
+                <button class="btn primary"><i class="fa-solid fa-circle"></i> Record</button>
+            </div>
+        </div>
+
+
+        <!-- Main grid: Video + Right col -->
+        <div class="main-grid">
+
+            <!-- VIDEO FEED -->
+            <div class="video-card">
+                <div class="vc-header">
+                    <div class="vc-cam">
+                        <div class="cam-online"></div>
+                        CAM-01 · Main Road
+                    </div>
+                    <div class="vc-rec">
+                        <div class="rec-dot"></div> REC
+                    </div>
+                </div>
+
+                <div class="vf">
+                    <!-- ✅ Replace with your Flask stream: <img src="/video"> -->
+                    <img src="/video" width="800">
+
+
+                    <!-- HUD corners -->
+                    <div class="hud-corner tl"></div>
+                    <div class="hud-corner tr"></div>
+                    <div class="hud-corner bl"></div>
+                    <div class="hud-corner br"></div>
+
+                    <!-- Bottom HUD bar -->
+                    <div class="hud-bottom">
+                        <span class="hud-text" id="clock">00:00:00</span>
+                        <span class="hud-text">30 FPS · 1080p</span>
+                    </div>
+                </div>
+
+                <!-- Per-class count bar -->
+                <div class="vc-bottom">
+                    <div class="vcs">
+                        <span class="n" style="color:#2563EB">8</span>
+                        <span class="l">Human</span>
+                    </div>
+                    <div class="vc-divider"></div>
+                    <div class="vcs">
+                        <span class="n" style="color:#15803D">7</span>
+                        <span class="l">2-Wheeler</span>
+                    </div>
+                    <div class="vc-divider"></div>
+                    <div class="vcs">
+                        <span class="n" style="color:#B45309">12</span>
+                        <span class="l">4-Wheeler</span>
+                    </div>
+                    <div class="vc-divider"></div>
+                    <div class="vcs">
+                        <span class="n" style="color:#6D28D9">4</span>
+                        <span class="l">6-Wheeler</span>
+                    </div>
+                    <div class="vc-divider"></div>
+                    <div class="vcs">
+                        <span class="n">31</span>
+                        <span class="l">Total</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="right-col">
+
+
+                <!-- Class Breakdown -->
+                <div class="card">
+                    <div class="card-head">
+                        <i class="fa-solid fa-chart-pie"></i> Class Breakdown
+                    </div>
+
+                    <div class="class-row">
+                        <div class="class-icon" style="background:#EFF4FF;color:#2563EB">
+                            <i class="fa-solid fa-person"></i>
+                        </div>
+                        <span class="class-name">Human</span>
+                        <span class="class-count" style="color:#2563EB">8</span>
+                    </div>
+
+                    <div class="class-row">
+                        <div class="class-icon" style="background:#DCFCE7;color:#15803D">
+                            <i class="fa-solid fa-motorcycle"></i>
+                        </div>
+                        <span class="class-name">2-Wheeler</span>
+                        <span class="class-count" style="color:#15803D">7</span>
+                    </div>
+
+                    <div class="class-row">
+                        <div class="class-icon" style="background:#FEF3C7;color:#B45309">
+                            <i class="fa-solid fa-car"></i>
+                        </div>
+                        <span class="class-name">4-Wheeler</span>
+                        <span class="class-count" style="color:#B45309">12</span>
+                    </div>
+
+                    <div class="class-row">
+                        <div class="class-icon" style="background:#EDE9FE;color:#6D28D9">
+                            <i class="fa-solid fa-truck"></i>
+                        </div>
+                        <span class="class-name">6-Wheeler</span>
+                        <span class="class-count" style="color:#6D28D9">4</span>
+                    </div>
+
+                </div>
+
+                <!-- Model Info -->
+                <div class="card">
+                    <div class="card-head">
+                        <i class="fa-solid fa-brain"></i> Model Info
+                    </div>
+                    <div class="m-row"><span class="m-key">Model</span><span class="m-val">YOLOv8-L</span></div>
+                    <div class="m-row"><span class="m-key">Framework</span><span class="m-val">PyTorch 2.2</span></div>
+                    <div class="m-row"><span class="m-key">Backend</span><span class="m-val">Flask + OpenCV</span></div>
+                    <div class="m-row"><span class="m-key">Classes</span><span class="m-val">Human, 2W, 4W, 6W</span>
+                    </div>
+                    <div class="m-row"><span class="m-key">Precision</span><span class="m-val">FP16</span></div>
+                </div>
+
+                <button onclick="showIdea()">View My Idea</button>
+
+            </div>
+        </div>
+        <!-- Hidden Content -->
+        <div id="ideaBox">
+
+            <div class="idea-header">
+                <div class="idea-header-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                <div>
+                    <h2>Project Idea</h2>
+                    <p>AI-Based Real-Time Vehicle & Human Detection System</p>
+                </div>
+            </div>
+
+            <div class="idea-grid">
+
+                <div class="idea-card blue">
+                    <div class="idea-card-title">
+                        <i class="fa-solid fa-circle-info"></i> What It Does
+                    </div>
+                    <p>A real-time AI system that detects vehicles and humans from a live camera feed and estimates
+                        their distance to enable smart driver assistance.</p>
+                </div>
+
+                <div class="idea-card green">
+                    <div class="idea-card-title">
+                        <i class="fa-solid fa-gears"></i> How It Works
+                    </div>
+                    <ul>
+                        <li><i class="fa-solid fa-check"></i> Detects 2-wheelers, 4-wheelers, 6-wheelers &amp; humans
+                        </li>
+                        <li><i class="fa-solid fa-check"></i> Estimates distance of each detected object</li>
+                        <li><i class="fa-solid fa-check"></i> Draws bounding boxes with class labels</li>
+                        <li><i class="fa-solid fa-check"></i> Streams live output via Flask to browser</li>
+                    </ul>
+                </div>
+
+                <div class="idea-card amber">
+                    <div class="idea-card-title">
+                        <i class="fa-solid fa-triangle-exclamation"></i> System Behavior
+                    </div>
+                    <ul>
+                        <li><i class="fa-solid fa-arrow-right"></i> <b>Above 300m</b> — Alert: "Vehicle detected ahead"
+                        </li>
+                        <li><i class="fa-solid fa-arrow-right"></i> <b>200m – 300m</b> — Tracks &amp; updates distance
+                            live</li>
+                        <li><i class="fa-solid fa-arrow-right"></i> <b>Below 200m</b> — Activates slow automatic braking
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="idea-card violet">
+                    <div class="idea-card-title">
+                        <i class="fa-solid fa-bullseye"></i> Purpose
+                    </div>
+                    <ul>
+                        <li><i class="fa-solid fa-shield-halved"></i> Accident prevention</li>
+                        <li><i class="fa-solid fa-car"></i> Smart driver assistance</li>
+                        <li><i class="fa-solid fa-road"></i> Road safety improvement</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+            function showIdea() {
+                document.getElementById("ideaBox").style.display = "block";
+            }
+        </script>
+        <!-- System Pipeline -->
+        <div class="pipeline-card">
+            <div class="section-title">
+                <i class="fa-solid fa-diagram-project"></i> System Pipeline
+            </div>
+            <div class="pipeline">
+
+                <div class="pipe-step">
+                    <div class="pipe-icon"><i class="fa-solid fa-video"></i></div>
+                    <div class="pipe-label">Webcam<br>Input</div>
+                </div>
+
+                <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="pipe-step">
+                    <div class="pipe-icon"><i class="fa-solid fa-film"></i></div>
+                    <div class="pipe-label">OpenCV<br>Frame Capture</div>
+                </div>
+
+                <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="pipe-step">
+                    <div class="pipe-icon"><i class="fa-solid fa-brain"></i></div>
+                    <div class="pipe-label">YOLOv8<br>Detection</div>
+                </div>
+
+                <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="pipe-step">
+                    <div class="pipe-icon"><i class="fa-solid fa-tags"></i></div>
+                    <div class="pipe-label">Class<br>Mapping</div>
+                </div>
+
+                <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="pipe-step">
+                    <div class="pipe-icon"><i class="fa-solid fa-vector-square"></i></div>
+                    <div class="pipe-label">Bounding<br>Box Draw</div>
+                </div>
+
+                <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="pipe-step">
+                    <div class="pipe-icon"><i class="fa-brands fa-python"></i></div>
+                    <div class="pipe-label">Flask<br>Server</div>
+                </div>
+
+                <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+                <div class="pipe-step">
+                    <div class="pipe-icon"><i class="fa-solid fa-globe"></i></div>
+                    <div class="pipe-label">Web<br>Browser</div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer>
+            AI-Based Real-Time Vehicle & Human Detection · YOLOv8 + Flask + OpenCV · Python
+        </footer>
+
+    </div>
+
+    <script>
+        // Live clock in video HUD
+        function tick() {
+            document.getElementById('clock').textContent =
+                new Date().toTimeString().slice(0, 8);
+        }
+        tick();
+        setInterval(tick, 1000);
+    </script>
+
+</body>
+
+</html>

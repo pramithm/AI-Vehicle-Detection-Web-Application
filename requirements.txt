@@ -1,0 +1,21 @@
+# Web Framework
+Flask==3.0.3
+
+# Computer Vision
+opencv-python==4.10.0.84
+
+# Deep Learning / Object Detection
+ultralytics==8.3.0
+
+# Core dependencies
+numpy==1.26.4
+pandas==2.2.2
+
+# Visualization (optional but useful)
+matplotlib==3.9.0
+
+# Utilities
+Pillow==10.4.0
+
+# Optional (for deployment & performance)
+gunicorn==22.0.0
